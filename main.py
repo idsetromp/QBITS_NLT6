@@ -1,6 +1,4 @@
-import GPU.blochSphere
-from QPU import *
-import GPU.measurementGraph
+from src.QPU import *
 from src import GPU
 
 
@@ -17,7 +15,7 @@ for shot in range(100):
 
     m.append(measure(A, False))
 
-GPU.measurementGraph.showGraph(m)
+GPU.drawGraph(m)
 
 C = qbit()
 D = qbit()
@@ -26,7 +24,7 @@ D = qbit()
 gate(Rx(30, 'degree'), D)
 gate(Rx(30, 'degree'), C)
 gate(Rz(60, 'degree'), C)
-GPU.blochSphere.drawBlochSphere([C, D])
+GPU.drawBlochSphere([C, D])
 
 
 

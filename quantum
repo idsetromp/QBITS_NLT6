@@ -27,9 +27,8 @@ cat >$1.py <<'EOM'
 # Importing libararies,
 # namely the Quantum Processing Unit (QPU),
 # and the Graphical Processing Unit (GPU).
-from QPU import *
-import GPU.blochSphere
-import GPU.measurementGraph
+from src.QPU import *
+from src import GPU
 
 #This is script does 100 shots of a series of quantum gates with two qbit.
 #At the end of each shot, one of the qbits is measured.
@@ -77,9 +76,8 @@ cat >$1.py <<'EOM'
 # Importing libararies,
 # namely the Quantum Processing Unit (QPU),
 # and the Graphical Processing Unit (GPU).
-from QPU import *
-import GPU.blochSphere
-import GPU.measurementGraph
+from src.QPU import *
+from src import GPU
 
 # This script creates two qbits,
 # applies a couple of gates to them,

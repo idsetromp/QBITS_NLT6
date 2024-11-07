@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import QPU
+import src.QPU
 import cmath
 
 def configurePlot():
@@ -119,7 +119,7 @@ def axes(ax):
     ax.plot3D(1, 1, 1, color='#FFFFFF', label='-z: |1\u27E9')
 
 
-def drawBlochSphere(qbits: list[QPU.qbit], sphereType='grid'):
+def drawBlochSphere(qbits: list[src.QPU.qbit], sphereType='grid'):
     """Function to draw Bloch sphere(s) of qbit(s). \n
     The parameter `qbits` requires a list of the qbits to render the bloch sphere of.\n
     `sphereType` sets whether the\n
