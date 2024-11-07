@@ -1,6 +1,9 @@
 import GPU.blochSphere
 from QPU import *
 import GPU.measurementGraph
+from src import GPU
+
+
 
 m = []
 for shot in range(100):

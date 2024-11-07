@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cmath
 
-def showGraph(measurements: list[str]):
+def drawGraph(measurements: list[str]):
     x = list(set(measurements))
     x = sorted(x)
 
