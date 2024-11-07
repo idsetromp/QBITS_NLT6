@@ -1,2 +1,2 @@
-from blochSphere import drawBlochSphere
-from measurementGraph import drawGraph
+from src.blochSphere import drawBlochSphere
+from src.measurementGraph import drawGraph
