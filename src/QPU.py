@@ -8,59 +8,59 @@ import numpy as np
 
 class qbit:
 
-    def __init__(self, matrix: np.matrix = np.matrix([[1.+0j], [0.+0j]])):
-        self.matrix = matrix
+    def __init__(self, vector: np.matrix = np.matrix([[1.+0j], [0.+0j]])):
+        self.vector = vector
 
-        if self.matrix.shape != (2, 1):
-            raise Exception(f"Error: qbit matrix has shape {self.matrix.shape}, expected shape (2, 1).")
+        if self.vector.shape != (2, 1):
+            raise Exception(f"Error: qbit vector has shape {self.vector.shape}, expected shape (2, 1).")
         
-        if sqrt(abs(self.matrix.item((0, 0))**2) + abs(self.matrix.item(1, 0)**2)) != 1:
-            raise ValueError(f"|Ψ> is {sqrt(self.matrix.item((0, 0))**2 + self.matrix.item(1, 0)**2)}, expected |Ψ> to equal 1.")
+        if sqrt(abs(self.vector.item((0, 0))**2) + abs(self.vector.item(1, 0)**2)) != 1:
+            raise ValueError(f"|Ψ> is {sqrt(self.vector.item((0, 0))**2 + self.vector.item(1, 0)**2)}, expected |Ψ> to equal 1.")
 
 
         self.entangledQbit = None
 
 
-def measure(q: qbit, Print=True): 
+def measure(q: qbit, Print=True) -> None: 
     """Measures the qbit, and prints the results if `Print` is True."""
 
     if q.entangledQbit == None:
         m = r.choices(
             population=["|0>","|1>"],
-            weights=[abs(q.matrix.item((0, 0))**2), abs(q.matrix.item((1,0))**2)] #! KLOPT HET DAT DIT DE ABS MOET ZIJN?
+            weights=[abs(q.vector.item((0, 0))**2), abs(q.vector.item((1,0))**2)] #! KLOPT HET DAT DIT DE ABS MOET ZIJN?
         )
 
         if m == ["|0>"]:
-            q.matrix = np.matrix([[1], [0]])
+            q.vector = np.matrix([[1], [0]])
             output = "|0>"
         elif m == ["|1>"]:
-            q.matrix = np.matrix([[0], [1]])
+            q.vector = np.matrix([[0], [1]])
             output = "|1>"
         
 
     else: 
         m = r.choices(
             population=["|00>", "|01>", "|10>", "|11>"],
-            weights=[abs(q.matrix.item((0, 0))), 
-                     abs(q.matrix.item((1, 0))),
-                     abs(q.matrix.item((2, 0))),
-                     abs(q.matrix.item((3, 0)))] #! KLOPT HET DAT DIT DE ABS MOET ZIJN?
+            weights=[abs(q.vector.item((0, 0))), 
+                     abs(q.vector.item((1, 0))),
+                     abs(q.vector.item((2, 0))),
+                     abs(q.vector.item((3, 0)))] #! KLOPT HET DAT DIT DE ABS MOET ZIJN?
         )
         if m == ["|00>"]:
-            q.matrix = np.matrix([[1], [0]])
-            q.entangledQbit.matrix = np.matrix([[1], [0]])
+            q.vector = np.matrix([[1], [0]])
+            q.entangledQbit.vector = np.matrix([[1], [0]])
             output = "|0>"
         elif m == ["|01>"]:
-            q.matrix = np.matrix([[1], [0]])
-            q.entangledQbit.matrix = np.matrix([[0], [1]])
+            q.vector = np.matrix([[1], [0]])
+            q.entangledQbit.vector = np.matrix([[0], [1]])
             output = "|0>"
         elif m == ["|10>"]:
-            q.matrix = np.matrix([[0], [1]])
-            q.entangledQbit.matrix = np.matrix([[1], [0]])
+            q.vector = np.matrix([[0], [1]])
+            q.entangledQbit.vector = np.matrix([[1], [0]])
             output = "|1>"
         elif m == ["|11>"]:
-            q.matrix = np.matrix([[0], [1]])
-            q.entangledQbit.matrix = np.matrix([[0], [1]])
+            q.vector = np.matrix([[0], [1]])
+            q.entangledQbit.vector = np.matrix([[0], [1]])
             output = "|1>"
 
         q.entangledQbit.entangledQbit = None
@@ -68,7 +68,7 @@ def measure(q: qbit, Print=True):
 
 
     if Print:
-        print(q.matrix)  
+        print(q.vector)  
 
     return output
 
@@ -224,9 +224,9 @@ def gate(type: Gate, q0: qbit, q1: qbit = None):
         
 
         O = type.matrix
-        for i in range(int(q0.matrix.shape[0]/2 - 1)):
+        for i in range(int(q0.vector.shape[0]/2 - 1)):
             O = np.kron(Identity.matrix, O)
-        q0.matrix = np.matmul(O, q0.matrix)
+        q0.vector = np.matmul(O, q0.vector)
     else:
         if not type.amountOfQbits > 1:
             raise TypeError(f"{type} takes one qbit, but two were given.")
@@ -234,14 +234,14 @@ def gate(type: Gate, q0: qbit, q1: qbit = None):
         q0.entangledQbit = q1
         q1.entangledQbit = q0
 
-        qbitsMatrix = np.kron(q0.matrix, q1.matrix)
+        qbitsVector = np.kron(q0.vector, q1.vector)
         
 
 
-        qbitsMatrix = np.matmul(type.matrix, qbitsMatrix)
+        qbitsVector = np.matmul(type.vector, qbitsVector)
 
-        q0.matrix = qbitsMatrix
-        q1.matrix = qbitsMatrix
+        q0.vector = qbitsVector
+        q1.vector = qbitsVector
 
 
 
