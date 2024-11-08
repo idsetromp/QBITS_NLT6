@@ -1,7 +1,10 @@
 from src.QPU import *
 from src import GPU
 
+a = qbit()
 
+gate(Hadamard, a)
+print(a.vector)
 
 m = []
 for shot in range(100):

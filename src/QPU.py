@@ -11,17 +11,17 @@ class qbit:
     def __init__(self, vector: np.matrix = np.matrix([[1.+0j], [0.+0j]])):
         self.vector = vector
 
-        if self.vector.shape != (2, 1):
-            raise Exception(f"Error: qbit vector has shape {self.vector.shape}, expected shape (2, 1).")
+        if self.vector.shape[1] != 1:
+            raise Exception(f"Error: qbit vector has shape {self.vector.shape}, expected shape (m, 1).")
         
-        if sqrt(abs(self.vector.item((0, 0))**2) + abs(self.vector.item(1, 0)**2)) != 1:
+        if round(sqrt(abs(self.vector.item((0, 0))**2) + abs(self.vector.item(1, 0)**2)), 5) != 1: #* round to prevent floating point errors.
             raise ValueError(f"|Ψ> is {sqrt(self.vector.item((0, 0))**2 + self.vector.item(1, 0)**2)}, expected |Ψ> to equal 1.")
 
 
         self.entangledQbit = None
 
 
-def measure(q: qbit, Print=True) -> None: 
+def measure(q: qbit, Print=True) -> str: 
     """Measures the qbit, and prints the results if `Print` is True."""
 
     if q.entangledQbit == None:
@@ -68,7 +68,10 @@ def measure(q: qbit, Print=True) -> None:
 
 
     if Print:
-        print(q.vector)  
+        if q.vector.item((0,0)) == 1:
+            print("|Ψ> = |0>")
+        elif q.vector.item((1,0)) == 1:
+            print("|Ψ> = |1>")
 
     return output
 
@@ -214,7 +217,7 @@ def CR(theta, angleUnit='radian'):
     )
 
 
-def gate(type: Gate, q0: qbit, q1: qbit = None):
+def gate(type: Gate, q0: qbit, q1: qbit = None) -> None:
     """Applies the gate set with `type` to the qbit set with `q0`. 
     When the specified gate requires two qbits, like with the CNOT, 
     `q0` will be used as the control, and `q1` will be the target qbit."""
@@ -238,7 +241,7 @@ def gate(type: Gate, q0: qbit, q1: qbit = None):
         
 
 
-        qbitsVector = np.matmul(type.vector, qbitsVector)
+        qbitsVector = np.matmul(type.matrix, qbitsVector)
 
         q0.vector = qbitsVector
         q1.vector = qbitsVector
