@@ -148,8 +148,8 @@ def drawBlochSphere(qbits: list[src.QPU.qbit], sphereType='grid'):
 
 
     
-        alpha = qbit.matrix.item((0, 0)) #* α|0> 
-        beta = qbit.matrix.item((1, 0)) #* β|1> π φ θ
+        alpha = qbit.vector.item((0, 0)) #* α|0> 
+        beta = qbit.vector.item((1, 0)) #* β|1> π φ θ
 
         #* |Ψ> = α|0> + β|1>
         #* |Ψ> = cos(θ/2)|0> + exp(iφ)*sin(θ/2)|1>
