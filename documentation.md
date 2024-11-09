@@ -1,5 +1,7 @@
 # Documentation for QBITS_NLT6
 
+**NOTE: If your application does not render $\begin{bmatrix}\LaTeX \\ \text{or} \\ \TeX \end{bmatrix}$ correctly, try again.**
+
 # Table of contents
 
 - [Documentation for QBITS\_NLT6](#documentation-for-qbits_nlt6)
@@ -26,7 +28,7 @@
     - [T\_gate](#t_gate)
     - [T\_dagger](#t_dagger)
     - [CNOT](#cnot)
-    - [C](#c)
+    - [CZ](#cz)
 - [GPU](#gpu)
   - [Bloch Sphere](#bloch-sphere)
 
