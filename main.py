@@ -2,32 +2,15 @@ from src.QPU import *
 from src import GPU
 
 a = qbit()
+b = qbit()
 
-gate(Hadamard, a)
+gate(Ry(120, 'degree'), a)
+gate(Hadamard, b)
+
+gate(CNOT, a, b)
 print(a.vector)
-
-m = []
-for shot in range(100):
-    A = qbit()
-    B = qbit()
-
-    #gate(Rz(115, 'degree'), A)
-    gate(Hadamard, A)
-    gate(Hadamard, B)
-    gate(CNOT, A, B)
-
-    m.append(measure(A, False))
-
-GPU.drawGraph(m)
-
-C = qbit()
-D = qbit()
-
-
-gate(Rx(30, 'degree'), D)
-gate(Rx(30, 'degree'), C)
-gate(Rz(60, 'degree'), C)
-GPU.drawBlochSphere([C, D])
+gate(CNOT, a, b)
+print(b.vector)
 
 
 

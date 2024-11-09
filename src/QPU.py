@@ -234,12 +234,14 @@ def gate(type: Gate, q0: qbit, q1: qbit = None) -> None:
         if not type.amountOfQbits > 1:
             raise TypeError(f"{type} takes one qbit, but two were given.")
 
-        q0.entangledQbit = q1
-        q1.entangledQbit = q0
+        if q1.entangledQbit == None:
+            q0.entangledQbit = q1
+            q1.entangledQbit = q0
 
-        qbitsVector = np.kron(q0.vector, q1.vector)
+            qbitsVector = np.kron(q0.vector, q1.vector)
         
-
+        else:
+            qbitsVector = q0.vector #* = q1.vector
 
         qbitsVector = np.matmul(type.matrix, qbitsVector)
 
