@@ -1,6 +1,6 @@
 # Documentation for QBITS_NLT6
 
-**NOTE: If your application does not render $\begin{bmatrix}\LaTeX \\ \text{or} \\ \TeX \end{bmatrix}$ correctly, try again.**
+**NOTE: If your application does not render $\begin{bmatrix}\LaTeX \\ \text{or} \\ \TeX \end{bmatrix}$ correctly, try again. huts**
 
 # Table of contents
 
