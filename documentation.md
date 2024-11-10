@@ -29,6 +29,11 @@
     - [T\_dagger](#t_dagger)
     - [CNOT](#cnot)
     - [CZ](#cz)
+    - [SWAP](#swap)
+    - [Rx](#rx)
+    - [Ry](#ry)
+    - [Rz](#rz)
+    - [CR](#cr)
 - [GPU](#gpu)
   - [Bloch Sphere](#bloch-sphere)
 
@@ -279,6 +284,84 @@ Voorhoede, D. (n.d.). Quantum inspire. Quantum Inspire. https://www.quantum-insp
 Quantum Computing | ShareTechnote. (n.d.). https://www.sharetechnote.com/html/QC/QuantumComputing_Gate_cZ.html
 
 **matrix:** $\begin{bmatrix}1&0&0&0\\0&1&0&0\\0&0&1&0\\0&0&0&-1\end{bmatrix}$
+
+**amountOfQbits:** 2
+
+### SWAP
+
+*The SWAP gate is two-qubit operation. Expressed in basis states, the SWAP gate swaps the state of the two qubits involved in the operation.*
+
+Voorhoede, D. (n.d.). Quantum inspire. Quantum Inspire. https://www.quantum-inspire.com/kbase/
+
+**matrix:** $\begin{bmatrix}1&0&0&0\\0&0&1&0\\0&1&0&0\\0&0&0&1\end{bmatrix}$
+
+**amountOfQbits:** 2
+
+### Rx
+
+*The Rx gate is one of the Rotation operators. The Rx gate is a single-qubit rotation through angle $\theta$ around the x-axis.*
+
+Voorhoede, D. (n.d.). Quantum inspire. Quantum Inspire. https://www.quantum-inspire.com/kbase/
+
+The Rx gate is built in as a function:
+
+``` python
+Rx(theta: float, angleUnit='radian') -> Gate
+```
+`theta` is the angle a qbit $\psi$ rotates around the x-axis when Rx is applied to $\psi$ using the `gate()` function (see [gate](#gate-1)). The standard unit of `theta` is radians, however, by setting the parameter `angleUnit` to `'degree'`, this can be changed. This function returns a `Gate` object with the following attributes:
+
+**matrix:** $\begin{bmatrix} \cos{\frac{\theta}{2}} & -i \sin{\frac{\theta}{2}} \\ -i \sin{\frac{\theta}{2}} & \cos{\frac{\theta}{2}}\end{bmatrix}$
+
+**amountOfQbits:** 1
+
+### Ry
+
+*The Ry gate is one of the Rotation operators. The Ry gate is a single-qubit rotation through angle $\theta$ around the y-axis.*
+
+Voorhoede, D. (n.d.). Quantum inspire. Quantum Inspire. https://www.quantum-inspire.com/kbase/
+
+The Ry gate is built in as a function:
+
+``` python
+Ry(theta: float, angleUnit='radian') -> Gate
+```
+`theta` is the angle a qbit $\psi$ rotates around the y-axis when Ry is applied to $\psi$ using the `gate()` function (see [gate](#gate-1)). The standard unit of `theta` is radians, however, by setting the parameter `angleUnit` to `'degree'`, this can be changed. This function returns a `Gate` object with the following attributes:
+
+**matrix:** $\begin{bmatrix} \cos{\frac{\theta}{2}} & - \sin{\frac{\theta}{2}} \\ \sin{\frac{\theta}{2}} & \cos{\frac{\theta}{2}}\end{bmatrix}$
+
+**amountOfQbits:** 1
+
+### Rz
+
+*The Rz gate is one of the Rotation operators. The Rz gate is a single-qubit rotation through angle $\theta$ around the z-axis.*
+
+Voorhoede, D. (n.d.). Quantum inspire. Quantum Inspire. https://www.quantum-inspire.com/kbase/
+
+The Rz gate is built in as a function:
+
+``` python
+Rz(theta: float, angleUnit='radian') -> Gate
+```
+`theta` is the angle a qbit $\psi$ rotates around the z-axis when Rx is applied to $\psi$ using the `gate()` function (see [gate](#gate-1)). The standard unit of `theta` is radians, however, by setting the parameter `angleUnit` to `'degree'`, this can be changed. This function returns a `Gate` object with the following attributes:
+
+**matrix:** $\begin{bmatrix} e^{-i\frac{\theta}{2}} & 0 \\ 0 & e^{i\frac{\theta}{2}}\end{bmatrix}$
+
+**amountOfQbits:** 1
+
+### CR
+
+*The CR gate is a controlled phase shift with angle $\thetasym$. This gate is a generalization of the CZ gate.*
+
+Voorhoede, D. (n.d.). Quantum inspire. Quantum Inspire. https://www.quantum-inspire.com/kbase/
+
+The CR gate is built in as a function:
+
+``` python
+CR(theta: float, angleUnit='radian') -> Gate
+```
+`theta` is the angle a target qbit $\phi$ rotates around the z-axis when CR is applied to $\phi$ and a control qbit $\psi$ when $\psi$ is in the state $|1\rangle$. This is done using the `gate()` function (see [gate](#gate-1)). The standard unit of `theta` is radians, however, by setting the parameter `angleUnit` to `'degree'`, this can be changed. This function returns a `Gate` object with the following attributes:
+
+**matrix:** $\begin{bmatrix}1&0&0&0\\0&1&0&0\\0&0&1&0\\0&0&0&e^{i\theta}\end{bmatrix}$
 
 **amountOfQbits:** 2
 

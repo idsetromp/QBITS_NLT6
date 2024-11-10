@@ -157,7 +157,15 @@ CZ = Gate(
     2
 )
 
-def Rx(theta, angleUnit='radian'):
+SWAP = Gate(
+    np.matrix([[1, 0, 0, 0],
+               [0, 0, 1, 0],
+               [0, 1, 0, 0],
+               [0, 0, 0, 1]]),
+    2
+)
+
+def Rx(theta: float, angleUnit='radian') -> Gate:
     """Rotates the qbit theta radians around the x axis, 
     unless `angleUnit` is set to 'degree', 
     in which case theta is in degrees."""
@@ -172,7 +180,7 @@ def Rx(theta, angleUnit='radian'):
         1
     )
 
-def Ry(theta, angleUnit='radian'):
+def Ry(theta: float, angleUnit='radian') -> Gate:
     """Rotates the qbit theta radians around the x axis, 
     unless `angleUnit` is set to 'degree', 
     in which case theta is in degrees."""
@@ -187,7 +195,7 @@ def Ry(theta, angleUnit='radian'):
         1
     )
 
-def Rz(theta, angleUnit='radian'):
+def Rz(theta: float, angleUnit='radian') -> Gate:
     """Rotates the qbit theta radians around the z axis, 
     unless `angleUnit` is set to 'degree', 
     in which case theta is in degrees."""
@@ -202,7 +210,7 @@ def Rz(theta, angleUnit='radian'):
         1
     )
 
-def CR(theta, angleUnit='radian'):
+def CR(theta: float, angleUnit='radian') -> Gate:
     if angleUnit == 'degree':
         theta = theta*pi/180
     elif angleUnit != 'radian':
