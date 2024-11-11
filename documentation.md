@@ -7,6 +7,7 @@
 - [Documentation for QBITS\_NLT6](#documentation-for-qbits_nlt6)
 - [Table of contents](#table-of-contents)
 - [Introduction](#introduction)
+- [Quantum shell script](#quantum-shell-script)
 - [QPU](#qpu)
   - [Classes](#classes)
     - [qbit](#qbit)
@@ -36,6 +37,7 @@
     - [CR](#cr)
 - [GPU](#gpu)
   - [Bloch Sphere](#bloch-sphere)
+  - [Measurement Graph](#measurement-graph)
 
 # Introduction
 
@@ -43,6 +45,22 @@ The library is made up of two important components: the QPU and de GPU.
 The QPU (Quantum Processing Unit) is used for all qbit-related stuff. E.g. quantum gates and measuring.
 The GPU (Graphical Processing Unit) is used for all, you guessed it, graphical stuff.
 Namely, displaying Bloch spheres and graphing measurement results.
+
+# Quantum shell script
+
+With the shell script file named 'quantum', a new python file can be created with the right packages included and an example program in order to get started on using this python package. When this package has been downloaded, open a UNIX terminal (just the terminal on Linux or Mac, or LSW (Linux Subsystem for Windows) on Windows) and change your working directory to the directory of this package. Then, the 'quantum' shell script must be made executable, this can be done by running the following command in the directory of this package:
+
+``` bash
+$ chmod u+x quantum
+```
+
+A new python file can be created with the following command:
+
+``` bash
+$ ./quantum myFile
+```
+
+Here, 'myFile' can be substituted for any name you like. In the directory of this package, you will then find myFile.py. This is just a normal python file containing an example program in order to show you how to use this package. There a two example programs, one showcasing the use of measurement graphs (see [Measurement Graph](#measurement-graph)), and one showcasing the use of bloch spheres (see [Bloch Sphere](#bloch-sphere)). Which example program you get, is chosen at random when running the 'quantum' shell script.
 
 # QPU
 
@@ -368,3 +386,5 @@ CR(theta: float, angleUnit='radian') -> Gate
 # GPU
 
 ## Bloch Sphere
+
+## Measurement Graph
