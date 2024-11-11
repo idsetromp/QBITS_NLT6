@@ -4,7 +4,7 @@
 #      Prevent overwriting important files
 #================================================
 case $1 in
-	QPU|GPU|blochSphere|measurementGraph|huts)
+	QPU|GPU|blochSphere|measurementGraph)
 		echo "Error: filename can't be" $1"."
 		exit 1
 		;;
