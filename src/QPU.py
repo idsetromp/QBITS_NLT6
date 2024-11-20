@@ -1,5 +1,5 @@
 from math import *
-import cmath #for complex numbres
+import cmath #for complex numbers
 import random as r
 import numpy as np
 from itertools import product
@@ -20,6 +20,7 @@ class qbit:
 
 
         self.entangledQbits: list[qbit] = None
+        self.entangledVector: list[qbit] = self.vector
 
 
 q: list[qbit] = []
@@ -27,11 +28,15 @@ q: list[qbit] = []
 def prep(qbit: qbit):
     q.append(qbit)
 
+    print(f"Prepped a new qbit: q[{q.index(qbit)}]")
 
-def measure(q: qbit, Print=True) -> str: 
-    """Measures the qbit, and prints the results if `Print` is True."""
+
+def measure(q: qbit) -> str: 
+    """Measures the qbit."""
 
     if q.entangledQbits == None:
+        #* If the measured qbit is not entangled:
+
         m = r.choices(
             population=["|0>","|1>"],
             weights=[abs(q.vector.item((0, 0))**2), abs(q.vector.item((1,0))**2)] 
@@ -46,18 +51,13 @@ def measure(q: qbit, Print=True) -> str:
         
     else: 
         entangledStates = [i for i in product(range(2), repeat=int(log(len(q.vector), 2)))]
-
-        entangledStatesStrings = []
-        for entangledState in entangledStates:
-            stateStr = "|"
-            for singleState in entangledState:
-                stateStr += str(singleState)
-            stateStr += ">"
-            entangledStatesStrings.append(stateStr)
+        #* creates a list of integers according to the amount of entangled qbits.
+        #* E.g. three qbits -> [000, 001, 010, 011, 100, 101, 110, 111]
 
         coefficientChances = []
-        for row in range(q.vector.shape[0]):
-            coefficientChances.append(abs(q.vector.item((row, 0))**2))
+        for row in range(q.entangledVector.shape[0]):
+            coefficientChances.append(abs(q.entangledVector.item((row, 0))**2))
+        #* α|00>+β|01>+γ|10>+δ|11> -> [α², β², γ², δ²]
 
         m = r.choices(
             population=entangledStates,
@@ -76,19 +76,15 @@ def measure(q: qbit, Print=True) -> str:
 
         for qbit in q.entangledQbits:
             qbit.entangledQbits = None
+            qbit.entangledVector = qbit.vector
 
         stateStr = "|"
         for state in m:
             stateStr += str(state)
         stateStr += ">"
         output = stateStr
+        #* E.g. 0 -> "|0>"
 
-
-    if Print:
-        if q.vector.item((0,0)) == 1:
-            print("|Ψ> = |0>")
-        elif q.vector.item((1,0)) == 1:
-            print("|Ψ> = |1>")
 
     return output
 
@@ -250,14 +246,21 @@ def sortQbitList(qbitList: list[qbit]) -> list[qbit]:
     
     return sortedList
 
+
+
 def addEntangledQbit(q0: qbit, q1: qbit):
     if q0.entangledQbits == None and q1.entangledQbits == None:
         entangledQbits = [q0, q1]
         entangledQbits = sortQbitList(entangledQbits)
+
+
+
+            
     elif q0.entangledQbits == None:
         entangledQbits = q1.entangledQbits
         entangledQbits.append(q0)
         entangledQbits = sortQbitList(entangledQbits)
+
     elif q1.entangledQbits == None:
         entangledQbits = q0.entangledQbits
         entangledQbits.append(q1)
@@ -267,9 +270,15 @@ def addEntangledQbit(q0: qbit, q1: qbit):
         entangledQbits += q1.entangledQbits
         entangledQbits = list(dict.fromkeys(entangledQbits)) #* remove duplicates
         entangledQbits = sortQbitList
-    
+
+    tensorStates = np.tensordot(q0.entangledVector, q1.entangledVector, axes=0)
     for qbit in entangledQbits:
         qbit.entangledQbits = entangledQbits
+        qbit.entangledVector = tensorStates
+    
+    
+
+    
 
 
 def gate(type: Gate, q0: qbit, q1: qbit = None) -> None:
@@ -277,29 +286,19 @@ def gate(type: Gate, q0: qbit, q1: qbit = None) -> None:
     When the specified gate requires two qbits, like with the CNOT, 
     `q0` will be used as the control, and `q1` will be the target qbit."""
     if q1 == None:
-        if type.amountOfQbits != 1: #? Error cathcing (:
+        if type.amountOfQbits != 1: #? Error catching (:
             raise Exception(f"Error: Only one qbit given. Expected {type.amountOfQbits} qbits.")
         
+        q0.vector = np.matmul(type.matrix, q0.vector)
 
-        O = type.matrix
-        for i in range(int(log(q0.vector.shape[0],2) - 1)):
-            O = np.kron(Identity.matrix, O)
-        q0.vector = np.matmul(O, q0.vector)
+
     else:
         if not type.amountOfQbits > 1:
             raise TypeError(f"{type} takes one qbit, but two were given.")
 
         addEntangledQbit(q0, q1)
 
-            qbitsVector = np.kron(q0.vector, q1.vector)
         
-        else:
-            qbitsVector = q0.vector #* = q1.vector
-
-        qbitsVector = np.matmul(type.matrix, qbitsVector)
-
-        q0.vector = qbitsVector
-        q1.vector = qbitsVector
 
 
 

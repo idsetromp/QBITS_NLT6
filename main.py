@@ -2,12 +2,16 @@ from src.QPU import *
 from src import GPU
 from itertools import product
 
-a = qbit()
+prep(qbit())
+prep(qbit(np.matrix([[0], [1]])))
+prep(qbit(np.matrix([[1/sqrt(2)], [1/sqrt(2)]])))
 
-a.vector = np.matrix([[1/sqrt(2)], [0], [1/sqrt(2)], [0]])
+gate(CNOT, q[0], q[1])
+print(q[0].entangledVector)
 
-gate(Hadamard, a)
+print("yay")
+gate(CNOT, q[0], q[2])
 
-print(a.vector)
+print(q[0].entangledVector)
 
 
