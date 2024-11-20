@@ -2,6 +2,7 @@ from math import *
 import cmath #for complex numbres
 import random as r
 import numpy as np
+from itertools import product
 
 
 
@@ -18,16 +19,22 @@ class qbit:
             raise ValueError(f"|Ψ> is {sqrt(self.vector.item((0, 0))**2 + self.vector.item(1, 0)**2)}, expected |Ψ> to equal 1.")
 
 
-        self.entangledQbit = None
+        self.entangledQbits: list[qbit] = None
+
+
+q: list[qbit] = []
+
+def prep(qbit: qbit):
+    q.append(qbit)
 
 
 def measure(q: qbit, Print=True) -> str: 
     """Measures the qbit, and prints the results if `Print` is True."""
 
-    if q.entangledQbit == None:
+    if q.entangledQbits == None:
         m = r.choices(
             population=["|0>","|1>"],
-            weights=[abs(q.vector.item((0, 0))**2), abs(q.vector.item((1,0))**2)] #! KLOPT HET DAT DIT DE ABS MOET ZIJN?
+            weights=[abs(q.vector.item((0, 0))**2), abs(q.vector.item((1,0))**2)] 
         )
 
         if m == ["|0>"]:
@@ -37,34 +44,44 @@ def measure(q: qbit, Print=True) -> str:
             q.vector = np.matrix([[0], [1]])
             output = "|1>"
         
-
     else: 
-        m = r.choices(
-            population=["|00>", "|01>", "|10>", "|11>"],
-            weights=[abs(q.vector.item((0, 0))), 
-                     abs(q.vector.item((1, 0))),
-                     abs(q.vector.item((2, 0))),
-                     abs(q.vector.item((3, 0)))] #! KLOPT HET DAT DIT DE ABS MOET ZIJN?
-        )
-        if m == ["|00>"]:
-            q.vector = np.matrix([[1], [0]])
-            q.entangledQbit.vector = np.matrix([[1], [0]])
-            output = "|0>"
-        elif m == ["|01>"]:
-            q.vector = np.matrix([[1], [0]])
-            q.entangledQbit.vector = np.matrix([[0], [1]])
-            output = "|0>"
-        elif m == ["|10>"]:
-            q.vector = np.matrix([[0], [1]])
-            q.entangledQbit.vector = np.matrix([[1], [0]])
-            output = "|1>"
-        elif m == ["|11>"]:
-            q.vector = np.matrix([[0], [1]])
-            q.entangledQbit.vector = np.matrix([[0], [1]])
-            output = "|1>"
+        entangledStates = [i for i in product(range(2), repeat=int(log(len(q.vector), 2)))]
 
-        q.entangledQbit.entangledQbit = None
-        q.entangledQbit = None
+        entangledStatesStrings = []
+        for entangledState in entangledStates:
+            stateStr = "|"
+            for singleState in entangledState:
+                stateStr += str(singleState)
+            stateStr += ">"
+            entangledStatesStrings.append(stateStr)
+
+        coefficientChances = []
+        for row in range(q.vector.shape[0]):
+            coefficientChances.append(abs(q.vector.item((row, 0))**2))
+
+        m = r.choices(
+            population=entangledStates,
+            weights=coefficientChances 
+        )
+        
+        m = m[0]
+        print(m)
+        print(q.entangledQbits)
+        print(len(m))
+        for i in range(len(m)):
+            if m[i] == 0:
+                q.entangledQbits[i].vector = np.matrix([[1], [0]])
+            elif m[i] == 1:
+                q.entangledQbits[i].vector = np.matrix([[0], [1]])
+
+        for qbit in q.entangledQbits:
+            qbit.entangledQbits = None
+
+        stateStr = "|"
+        for state in m:
+            stateStr += str(state)
+        stateStr += ">"
+        output = stateStr
 
 
     if Print:
@@ -225,6 +242,36 @@ def CR(theta: float, angleUnit='radian') -> Gate:
     )
 
 
+def sortQbitList(qbitList: list[qbit]) -> list[qbit]:
+    sortedList = []
+    for qbit in q:
+        if qbit in qbitList:
+            sortedList.append(qbit)
+    
+    return sortedList
+
+def addEntangledQbit(q0: qbit, q1: qbit):
+    if q0.entangledQbits == None and q1.entangledQbits == None:
+        entangledQbits = [q0, q1]
+        entangledQbits = sortQbitList(entangledQbits)
+    elif q0.entangledQbits == None:
+        entangledQbits = q1.entangledQbits
+        entangledQbits.append(q0)
+        entangledQbits = sortQbitList(entangledQbits)
+    elif q1.entangledQbits == None:
+        entangledQbits = q0.entangledQbits
+        entangledQbits.append(q1)
+        entangledQbits = sortQbitList(entangledQbits)
+    else:
+        entangledQbits = q0.entangledQbits
+        entangledQbits += q1.entangledQbits
+        entangledQbits = list(dict.fromkeys(entangledQbits)) #* remove duplicates
+        entangledQbits = sortQbitList
+    
+    for qbit in entangledQbits:
+        qbit.entangledQbits = entangledQbits
+
+
 def gate(type: Gate, q0: qbit, q1: qbit = None) -> None:
     """Applies the gate set with `type` to the qbit set with `q0`. 
     When the specified gate requires two qbits, like with the CNOT, 
@@ -235,16 +282,14 @@ def gate(type: Gate, q0: qbit, q1: qbit = None) -> None:
         
 
         O = type.matrix
-        for i in range(int(q0.vector.shape[0]/2 - 1)):
+        for i in range(int(log(q0.vector.shape[0],2) - 1)):
             O = np.kron(Identity.matrix, O)
         q0.vector = np.matmul(O, q0.vector)
     else:
         if not type.amountOfQbits > 1:
             raise TypeError(f"{type} takes one qbit, but two were given.")
 
-        if q1.entangledQbit == None:
-            q0.entangledQbit = q1
-            q1.entangledQbit = q0
+        addEntangledQbit(q0, q1)
 
             qbitsVector = np.kron(q0.vector, q1.vector)
         
