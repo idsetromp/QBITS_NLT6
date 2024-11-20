@@ -1,17 +1,13 @@
 from src.QPU import *
 from src import GPU
+from itertools import product
 
 a = qbit()
-b = qbit()
 
-gate(Ry(120, 'degree'), a)
-gate(Hadamard, b)
+a.vector = np.matrix([[1/sqrt(2)], [0], [1/sqrt(2)], [0]])
 
-gate(CNOT, a, b)
+gate(Hadamard, a)
+
 print(a.vector)
-gate(CNOT, a, b)
-print(b.vector)
-
-
 
 
