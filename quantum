@@ -24,7 +24,7 @@ cat >$1.py <<'EOM'
 # Feel free to add to and delete from this script as you like,
 # in order to create your own script.
 
-# Importing libararies,
+# Importing libraries,
 # namely the Quantum Processing Unit (QPU),
 # and the Graphical Processing Unit (GPU).
 from src.QPU import *
@@ -41,9 +41,9 @@ measurements = []
 for shot in range(100):
 	
 	# Two qbits are created.
-	q0 = qbit()
-	q1 = qbit()
-	
+	prep(qbit(Print=False)) # Print is set to False to prevent printing the same message 100 times in the loop.
+    prep(qbit(Print=False))
+
 	# Some gates are applied.
 	gate(Pauli_X, q1)
 	gate(Hadamard, q0)
@@ -63,7 +63,7 @@ for shot in range(100):
 # Finally, the measured values are graphed.
 GPU.showGraph(measurements) 
 
-# See documentation.md for more functionallities!
+# See documentation.md for more functionalities!
 
 EOM
 
@@ -73,7 +73,7 @@ cat >$1.py <<'EOM'
 # Feel free to add to and delete from this script as you like,
 # in order to create your own script.
 
-# Importing libararies,
+# Importing libraries,
 # namely the Quantum Processing Unit (QPU),
 # and the Graphical Processing Unit (GPU).
 from src.QPU import *
@@ -84,8 +84,8 @@ from src import GPU
 # and finally displays both qbits on the bloch sphere.
 
 # Creating the two qbits.
-q0 = qbit()
-q1 = qbit()
+prep(qbit())
+prep(qbit())
 
 # Applying the gates.
 gate(Rx(45, angleUnit='degree'), q0) # Here, we want to rotate q0 45°.
@@ -100,7 +100,7 @@ gate(Hadamard, q0)
 # Finally, the two qbits are displayed on the bloch sphere.
 GPU.drawBlochSphere([q0, q1])
 
-# See documentation.md for more functionallity!
+# See documentation.md for more functionality!
 
 
 EOM

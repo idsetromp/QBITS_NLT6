@@ -1,6 +1,6 @@
 # Documentation for QBITS_NLT6
 
-**<font color='red'>NOTE: If your application does not render $\begin{bmatrix}\LaTeX \\ \text{or} \\ \TeX \end{bmatrix}$ correctly, try again. huts</font>**
+**<font color='red'>NOTE: If your application does not render $\begin{bmatrix}\LaTeX \\ \text{or} \\ \TeX \end{bmatrix}$ correctly, try [https://docs.google.com/document/d/1s-Eod2-OySq_McXqkHLD3VHD5G-BN8R_Dr9KKaiZe1I/edit?usp=sharing](https://docs.google.com/document/d/1s-Eod2-OySq_McXqkHLD3VHD5G-BN8R_Dr9KKaiZe1I/edit?usp=sharing). </font>**
 
 # Table of contents
 
@@ -12,11 +12,11 @@
   - [Classes](#classes)
     - [qbit](#qbit)
       - [Attributes](#attributes)
-    - [Gate](#gate)
   - [Functions](#functions)
+    - [prep](#prep)
     - [measure](#measure)
       - [Parameters](#parameters)
-    - [gate](#gate-1)
+    - [gate](#gate)
       - [Parameters](#parameters-1)
   - [Built-in Gates](#built-in-gates)
     - [Hadamard](#hadamard)
@@ -45,6 +45,7 @@ The library is made up of two important components: the QPU and de GPU.
 The QPU (Quantum Processing Unit) is used for all qbit-related stuff. E.g. quantum gates and measuring.
 The GPU (Graphical Processing Unit) is used for all, you guessed it, graphical stuff.
 Namely, displaying Bloch spheres and graphing measurement results.
+To use this library, create a .py file in the parent directory of `src/` (`src/` is the directory which contains QPU.py and GPU.py). This can be done automatically by using [Quantum shell script](#quantum-shell-script). 
 
 # Quantum shell script
 
@@ -63,6 +64,9 @@ $ ./quantum myFile
 Here, 'myFile' can be substituted for any name you like. In the directory of this package, you will then find myFile.py. This is just a normal python file containing an example program in order to show you how to use this package. There a two example programs, one showcasing the use of measurement graphs (see [Measurement Graph](#measurement-graph)), and one showcasing the use of bloch spheres (see [Bloch Sphere](#bloch-sphere)). Which example program you get, is chosen at random when running the 'quantum' shell script.
 
 # QPU
+The QPU is the 'brain' of this library. Al the calculations, superpositions, entanglements and gates are done in the QPU. Make sure to import QPU.py in order to use it. This can be done with the following line of code:
+
+`from src.QPU import *`
 
 ## Classes
 
@@ -74,7 +78,7 @@ class qbit
         ...
 ```
 
-The qbit class. Making an object of this class (`myQbit = qbit()`) creates a qbit.
+The qbit class. To create a qbit, use the [prep](#prep) function.
 
 #### Attributes
 
@@ -99,45 +103,46 @@ When using de built-in quantum gates this will always be true.
 However, when the user manually sets the qbit's vector,
 the length of the vector must equal to $1$.
 This can be done as follows:
-`myQbit.vector = np.matrix([[a], [b]])`, where `myQbit` is an object of `qbit`, and `a` and `b` are chosen floats which may be complex numbers. Note that the imaginary unit $i$ is denoted in python by `j` placed directly after any number (e.g. `.5 + 1.0j` = $0.5+i$).
+`q[0].vector = np.matrix([[a], [b]])`, where `q[0]` is an object of `qbit` (made using [prep](#prep)), and `a` and `b` are chosen floats which may be complex numbers. Note that the imaginary unit $i$ is denoted in python by `j` placed directly after any number (e.g. `.5 + 1.0j` = $0.5+i$).
 
 ---
 
 **entangledQbit:** *qbit*
 
-When two qbit objects get entangled, of the attribute `entangledQbit` of both objects is set to the other object. This is done automatically.
-
-### Gate
+When two qbit objects get entangled, of the attribute `entangledQbit` of both objects is set to the same list containing the two `qbit` objects.
 
 ## Functions
+
+### prep
+
+``` python
+def prep(qbit: qbit, Print=True):
+    ...
+```
+
+This function creates a new qbit and prints "Prepped a new qbit: q\[n]" in the terminal. Here, n is the 'index' of the qbit. The first qbit created will be q\[0], the second q\[1] and so on. q\[n] is an object of the [qbit](#qbit) class. The message printed to the terminal is ony printed is the attribute `Print` is set to `True`. If set to `False`, nothing is printed. When left unspecified,the default is `True`.
 
 ### measure
 
 ``` python
-measure(q: qbit, Print=True) -> str
+measure(q: qbit) -> str
 ```
 
-Measures the qbit, prints the measurement and returns the measurement.
-When a qbit is measured, its wave function collapses. The function returns either the string `'|0>'` or `'|1>'`.
+Measures the qbit and returns the measured state, e.g. '|0>' or '|10>'.
+When a qbit is measured, its wave function collapses. This means that, regardless of entanglement or superposition, the qbit is set to either '|0>' or '|1>'.
 
 #### Parameters
 
 ---
 **q:** *qbit*
 
-The qbit which is measured. After measurement, the wave function of the qbit collapses. This is mathematically noted as follows:
+The qbit which is measured. After measurement, the wave function of the qbit collapses. This is mathematically denoted as follows:
 
 $$|\psi\rangle = \sum_i c_i |\phi_i\rangle \rightarrow |\psi'\rangle = |\phi_i\rangle$$
 
 E.g. a qbit denoted by $|\psi\rangle = \frac{1}{2}|0\rangle + \frac{1}{2}\sqrt3|1\rangle$ can collapse to either $|\psi\rangle = |0\rangle$ or $|\psi\rangle = |1\rangle$. Which one, is determined by chance based on the coefficients squared of the states. In this case, there is a chance of $\left( \frac{1}{2} \right)^2 = 0.25$ that $\psi$ collapses to $|0\rangle$, and a chance of $\left(\frac{1}{2}\sqrt3\right)$ that $\psi$ collapses to $|1\rangle$.
 
-When `q` is set to an entangled qbit, the wave function of both qbits collapses to either $|0\rangle$ or $|1\rangle$. Only the measurement of the initial qbit which `q` is set to, is returned by the function.
-
----
-
-**Print:** *boolean, standard value is `True`*
-
-When true, the function prints the measurement to the terminal.
+When `q` is set to an entangled qbit, the wave function of both qbits collapses to either $|0\rangle$ or $|1\rangle$..
 
 ---
 ---
@@ -148,7 +153,7 @@ When true, the function prints the measurement to the terminal.
 gate(type: Gate, q0: qbit, q1: qbit = None) -> None
 ```
 
-Applies a gate to qbit(s).
+Applies a gate to qbit(s). Note that entanglement of more than two qbits is not well built in. This can thus lead to unexpected and wrong results.
 
 #### Parameters
 
@@ -383,8 +388,34 @@ CR(theta: float, angleUnit='radian') -> Gate
 
 **amountOfQbits:** 2
 
+---
+---
+
 # GPU
+The GPU is responsible for all graphics. Both a graph of measured states and Bloch spheres can be rendered. In order to use the GPU, make sure to import it. This can be done with the following line of code:
+
+`from src import GPU`
+
+An alternative would be `from src.GPU import *`. However, to make a clear distinction between what is part of the QPU and GPU, `from src import GPU` is used. The latter requires all the GPU commands to be prefixed by `GPU.`, which distinguishes them from the QPU commands.
 
 ## Bloch Sphere
+A bloch sphere is a visual representation of an unentangled qbit.
+
+``` python
+def drawBlochSphere(qbits: list[src.QPU.qbit], sphereType='grid'):
+    ...
+```
+
+At any point, the bloch sphere of a qbit can be rendered with the command `GPU.drawBlochSphere(q)`. Here, `q` is a list of qbit objects (e.g. `[q[0], q[2]]`). It is possible to choose between a 'grid' or an 'axis-lines' look, by setting the attribute `sphereType` to either one of the two. If left unspecified, the standard is 'grid'.
+
+!['grid'](/src/assets/grid.png "'grid' example image")
+
+!['axis-lines'](/src/assets/axis-lines.png "'axis-lines' example image")
 
 ## Measurement Graph
+``` python
+def drawGraph(measurements: list[str]):
+    ...
+```
+
+Graphs the amount of times every state in the list `measurements` appears. Render this graph with the command `GPU.drawGraph(m)`, where `m` is a list filled with the outputs of the [measure](#measure) function.
