@@ -126,6 +126,8 @@ def drawBlochSphere(qbits: list[src.QPU.qbit], sphereType='grid'):
     ![grid example](/assets/grid.png)"""
 
     for qbit in qbits:
+        if qbit.entangledQbits != None:
+            raise Exception("Entangled qbits cannot be visualised in the Bloch sphere.")
     #? ========================================
     #$      Configure plot, axes, etc.         
     #? ========================================
@@ -184,7 +186,6 @@ def drawBlochSphere(qbits: list[src.QPU.qbit], sphereType='grid'):
 
         plt.legend(
             loc="upper left"
- #           reverse=True, draggable=True, shadow=True #! werkt niet >:(
                    
         )
 
